@@ -1,6 +1,7 @@
 # Copyright (C) 2024 * Ltd. All rights reserved.
 # author: Sanghyun Jo <shjo.april@gmail.com>
 
+import os
 import torch
 import numpy as np
 import sanghyunjo as shjo
@@ -42,12 +43,13 @@ with torch.no_grad():
     output_dir = shjo.makedir(f'./temp/{args.data}_{args.uss}@{args.backbone}/{args.domain}_{tag}/')
     
     for image_path in shjo.progress(shjo.listdir(args.root + args.data + '/' + args.domain + '/image/*')):
-        cv_image = shjo.read_image(image_path)
+        cv_image = shjo.imread(image_path)
         ih, iw = cv_image.shape[:2]
 
-        image_name, image_ext = shjo.get_name(image_path, ext=True)
-        pt_path = output_dir + image_name.replace('.'+image_ext, f'.pt')
-        pca_path = output_dir + image_name.replace('.'+image_ext, f'.png')
+        image_name = os.path.basename(image_path)
+        image_base, image_ext = os.path.splitext(image_name)
+        pt_path = output_dir + image_base + '.pt'
+        pca_path = output_dir + image_base + '.png'
 
         if not shjo.isfile(pt_path):
             global_uss = torch.zeros((model.embed_dim, ih, iw)).cuda().float()
