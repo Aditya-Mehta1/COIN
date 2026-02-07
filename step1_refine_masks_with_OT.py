@@ -151,5 +151,5 @@ if __name__ == '__main__':
             else:
                 pseudo_mask = np.argmax(heatmaps.cpu().numpy(), axis=0)
 
-        shjo.write_image(mask_dir + image_id + '.png', pseudo_mask, colors)
+        shjo.write_image(mask_dir + image_id + '.png', pseudo_mask.astype(np.uint8), colors)
 
