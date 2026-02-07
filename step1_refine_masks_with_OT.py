@@ -64,14 +64,12 @@ if __name__ == '__main__':
                     centroids_per_sample = f_uss[:, pred_mask > 0]
                     if args.average_per_sample:
                         centroids_per_sample = centroids_per_sample.mean(dim=1, keepdim=True)
-                    centroids.append(centroids_per_sample)
-
-                    import gc
-                    gc.collect()
+                    centroids.append(centroids_per_sample.cpu())
+                    del f_uss, centroids_per_sample
                     torch.cuda.empty_cache()
 
         
-        accumulated_centroid = torch.cat(centroids, dim=1).mean(dim=1)
+        accumulated_centroid = torch.cat(centroids, dim=1).mean(dim=1).cuda()
     else:
         accumulated_centroid = None
 
@@ -98,6 +96,8 @@ if __name__ == '__main__':
                     ]
                 )
                 heatmaps.append(F.cosine_similarity(centroids[:, :, None, None], f_uss[None, :, :, :], dim=1))
+                del f_uss, centroids
+                torch.cuda.empty_cache()
 
         heatmaps = torch.stack(heatmaps).mean(dim=0)
 
