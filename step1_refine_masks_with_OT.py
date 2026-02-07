@@ -65,6 +65,11 @@ if __name__ == '__main__':
                     if args.average_per_sample:
                         centroids_per_sample = centroids_per_sample.mean(dim=1, keepdim=True)
                     centroids.append(centroids_per_sample)
+
+                    import gc
+                    gc.collect()
+                    torch.cuda.empty_cache()
+
         
         accumulated_centroid = torch.cat(centroids, dim=1).mean(dim=1)
     else:
