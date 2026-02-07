@@ -1,6 +1,7 @@
 # Copyright (C) 2024 * Ltd. All rights reserved.
 # author: Sanghyun Jo <shjo.april@gmail.com>
 
+import os
 import torch
 import numpy as np
 import sanghyunjo as shjo
@@ -50,10 +51,10 @@ if __name__ == '__main__':
         
         for pred_path in shjo.progress(shjo.listdir(args.pred + '*.png'), 'Accumulation'):
             pred_path = pred_path.replace('\\', '/')
-            mask_name = shjo.get_name(pred_path)
+            mask_name = os.path.basename(pred_path)
             image_id = mask_name.replace('.png', '')
 
-            pred_mask = shjo.read_image(args.pred + image_id + '.png')
+            pred_mask = shjo.imread(args.pred + image_id + '.png')
             pred_mask = pred_mask.astype(np.int64)
             pred_mask = pred_mask[:, :, 0] * 256 + pred_mask[:, :, 1]
 
@@ -71,10 +72,10 @@ if __name__ == '__main__':
 
     for pred_path in shjo.progress(shjo.listdir(args.pred + '*.png')):
         pred_path = pred_path.replace('\\', '/')
-        mask_name = shjo.get_name(pred_path)
+        mask_name = os.path.basename(pred_path)
         image_id = mask_name.replace('.png', '')
 
-        pred_mask = shjo.read_image(args.pred + image_id + '.png')
+        pred_mask = shjo.imread(args.pred + image_id + '.png')
         pred_mask = pred_mask.astype(np.int64)
         pred_mask = pred_mask[:, :, 0] * 256 + pred_mask[:, :, 1]
 
@@ -108,7 +109,7 @@ if __name__ == '__main__':
             heatmaps[0] = torch.maximum(heatmaps[0], 1. - heatmaps[1])
         
             # Refine CRF
-            cv_image = shjo.read_image(shjo.listdir(args.image + image_id + '.*')[0])
+            cv_image = shjo.imread(shjo.listdir(args.image + image_id + '.*')[0])
             if cv_image.shape[-1] == 4:
                 cv_image = cv_image[..., :3]
 
@@ -133,7 +134,7 @@ if __name__ == '__main__':
 
             if args.gamma > 0:
                 # Refine CRF
-                cv_image = shjo.read_image(shjo.listdir(args.image + image_id + '.*')[0])
+                cv_image = shjo.imread(shjo.listdir(args.image + image_id + '.*')[0])
                 if cv_image.shape[-1] == 4:
                     cv_image = cv_image[..., :3]
 

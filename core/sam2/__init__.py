@@ -4,6 +4,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
+import os
 import cv2
 import torch
 import numpy as np
@@ -18,7 +19,7 @@ from .automatic_mask_generator import SAM2AutomaticMaskGenerator, SamEdgeGenerat
 
 class EdgeSAM2:
     def __init__(self, pt_path, batch=64, details=False, device=torch.device('cuda:0')):
-        sam = build_sam2(shjo.basename(pt_path.replace('.pt', '.yaml')), pt_path, device, apply_postprocessing=False)
+        sam = build_sam2(os.path.basename(pt_path.replace('.pt', '.yaml')), pt_path, device, apply_postprocessing=False)
 
         params = {
             'points_per_batch': batch
@@ -59,7 +60,7 @@ class EdgeSAM2:
     
 class SuperpixelSAM2:
     def __init__(self, pt_path, batch=64, details=False, device=torch.device('cuda:0')):
-        sam = build_sam2(shjo.get_name(pt_path.replace('.pt', '.yaml')), pt_path, device, apply_postprocessing=False)
+        sam = build_sam2(os.path.basename(pt_path.replace('.pt', '.yaml')), pt_path, device, apply_postprocessing=False)
         
         # refer to: https://github.com/facebookresearch/segment-anything-2/blob/main/notebooks/automatic_mask_generator_example.ipynb
         params = {
@@ -88,7 +89,7 @@ class SuperpixelSAM2:
     
 class SAM2:
     def __init__(self, pt_path, device=torch.device('cuda:0')):
-        sam = build_sam2(shjo.basename(pt_path.replace('.pt', '.yaml')), pt_path, device)
+        sam = build_sam2(os.path.basename(pt_path.replace('.pt', '.yaml')), pt_path, device)
         self.mask_predictor = SAM2ImagePredictor(sam)
 
     def set_image(self, image):

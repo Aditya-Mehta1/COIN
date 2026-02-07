@@ -1,6 +1,7 @@
 # Copyright (C) 2024 * Ltd. All rights reserved.
 # author: Sanghyun Jo <shjo.april@gmail.com>
 
+import os
 import cmapy
 import numpy as np
 import sanghyunjo as shjo
@@ -37,7 +38,7 @@ if __name__ == '__main__':
 
     for pred_path in shjo.progress(sorted(shjo.listdir(args.pred + '*.png'))):
         pred_path = pred_path.replace('\\', '/')
-        mask_name = shjo.basename(pred_path)
+        mask_name = os.path.basename(pred_path)
         image_id = mask_name.replace('.png', '')
 
         pred_mask = shjo.imread(args.pred + image_id + '.png')
