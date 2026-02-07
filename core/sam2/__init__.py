@@ -94,6 +94,10 @@ class SAM2:
 
     def set_image(self, image):
         image = shjo.convert(image, 'bgr2rgb')
+        if image.dtype != np.uint8:
+            image = ((image - image.min()) / max(float(image.max() - image.min()), 1) * 255).astype(np.uint8)
+        if image.shape[-1] == 4:
+            image = image[..., :3]
         self.mask_predictor.set_image(image.copy())
     
     """
