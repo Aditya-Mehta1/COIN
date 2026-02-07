@@ -170,6 +170,7 @@ class ElasticTransform:
     def elastic_transform(self, img, interpolation, random_state):
         if isinstance(img, Image.Image):
             img = np.asarray(img)
+        original_dtype = img.dtype
         h, w = img.shape[:2]
 
         center_square = np.array((h, w), dtype=np.float32) // 2
@@ -194,7 +195,7 @@ class ElasticTransform:
         map_x = np.float32(x + dx)
         map_y = np.float32(y + dy)
         img = cv2.remap(img, map_x, map_y, interpolation=interpolation, borderMode=self.border_mode, borderValue=None)
-        return Image.fromarray(img)
+        return Image.fromarray(img.astype(original_dtype))
 
     def __repr__(self):
         return f'ElasticTransform (p={self.p})'

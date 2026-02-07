@@ -33,7 +33,7 @@ class ConventionalDataset:
 
             gt_mask = gt_mask.astype(np.int64)
             gt_mask = gt_mask[:, :, 0] * 256 + gt_mask[:, :, 1]
-            binary_mask = (gt_mask > 0).astype(np.float32)
+            binary_mask = (gt_mask > 0).astype(np.uint8)
 
             return Image.fromarray(binary_mask)
         else:

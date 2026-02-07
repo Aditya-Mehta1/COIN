@@ -95,8 +95,11 @@ if __name__ == '__main__':
                         f_uss[:, pred_mask > 0].mean(dim=1) if accumulated_centroid is None else accumulated_centroid
                     ]
                 )
-                heatmaps.append(F.cosine_similarity(centroids[:, :, None, None], f_uss[None, :, :, :], dim=1))
-                del f_uss, centroids
+                # Compute cosine similarity via matmul to avoid huge broadcast intermediate
+                centroids_n = F.normalize(centroids, dim=1)  # (2, C)
+                C_dim, H, W = f_uss.shape
+                heatmaps.append((centroids_n @ f_uss.reshape(C_dim, -1)).view(2, H, W))
+                del f_uss, centroids, centroids_n
                 torch.cuda.empty_cache()
 
         heatmaps = torch.stack(heatmaps).mean(dim=0)

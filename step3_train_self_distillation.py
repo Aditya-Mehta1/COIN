@@ -178,7 +178,7 @@ def main(args):
                 pred_mask, _ = model.apply_ms(images)
 
                 return {
-                    'pred_mask': np.argmax(torch_utils.get_numpy(pred_mask), axis=0), 
+                    'pred_mask': np.argmax(torch_utils.get_numpy(pred_mask), axis=0).astype(np.uint8),
                     'gt_mask': torch_utils.get_numpy(masks[0])
                 }
 
